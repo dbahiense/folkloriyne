@@ -34,6 +34,7 @@ class HomeController extends Controller
         $parameters = [
             'index' => 'folklor',
             'type' => 'story',
+            'size' => 100,
             'body' =>  [
                 'query' => [
                     'multi_match' => [
