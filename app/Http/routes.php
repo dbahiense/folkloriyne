@@ -11,6 +11,17 @@
 |
 */
 
-$app->get('/', function () use ($app) {
+$app->get('/', [
+	'as' => 'home',
+	'uses' => 'HomeController@index'
+]);
+
+$app->post('/post', [
+	'as' => 'post',
+	'uses' => 'HomeController@post'
+]);
+
+$app->get('version', function () use ($app) {
     return $app->version();
 });
+
