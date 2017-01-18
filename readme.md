@@ -5,11 +5,8 @@ folkloriyne is a searching tool that... NGA FOLKLORI YNË
 ## TODOs:
 
 - create result list with the following information:
-	- [title], [volume], [page], [nr]
-	- Category: [category]
-	- Story collect in [year]
-	- Information about the teller:
-	- [name]
+	- [category], [title], [volume], [page], [nr], [year]
+	- [name], (expand)
 	- [text]
 
 - how to transform location in a google maps link: 
