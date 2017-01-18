@@ -16,7 +16,7 @@ class HomeController extends Controller
     public function post(Request $request)
     {
         // User input from the search form.
-        $input = 'kumara'; // $request->input('input');
+        $input = $request->input('input');
 
         $hosts = [
             '127.0.0.1:9200'
