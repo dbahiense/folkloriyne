@@ -4,6 +4,13 @@ folkloriyne is a searching tool that... NGA FOLKLORI YNË
 
 ## TODOs
 
+- create result list with the following information:
+	- [title], [volume], [page], [nr]
+	- Category: [category]
+	- Story collect in [year]
+	- [text]
+	- Information about the teller
+
 - if user enters more than one word, we have to weight the results in the following way:
 	- consider all words together in the order user entered them;
 	- consider all words togehter in any order;
