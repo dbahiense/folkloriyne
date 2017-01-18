@@ -45,36 +45,23 @@
 		</div><!-- /.container -->
 	</nav>
 
-	<div class="container">
+	<div class="container" style="margin-bottom: 16px;">
 		<div class="row">
-			<div class="col-sm-12">
+			<div class="col-xs-12">
 				<form action="/post" class="form-inline" method="post" name="form" role="form">
-					<div class="form-group"> 
+					<div class="input-group input-group-lg" style="width: 100%;">
 						<input class="form-control" id="input" name="input" type="text" />
-						<button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+						<span class="input-group-btn">
+							<button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+						</span>
 					</div>
 				</form>
 			</div>
 		</div>
 	</div><!-- /.container -->
 
-	<div class="container">
-
+	<div class="container fluid">
 		<div class="row">
-
-			<?php
-				if (isset($charts))
-				{
-					echo 'Category: '.$category;
-					echo '<br />';
-					echo 'Markets: '.$markets_chart;
-					echo '<br />';
-					echo 'Score: '.$score;
-					echo '<br />';
-					print $charts;
-				}
-			?>
-
 			<div class="col-xs-12">
 				<?php
 					if (isset($output))
@@ -86,18 +73,21 @@
 		</div>
 	</div><!-- /.container -->
 
-	<?php
-        if (isset($hits)) {
-			echo 'Hits: '.$hits;
-        }
+	<div class="container fluid">
+		<div class="row">
+			<div class="col-xs-12">
 
-        if (isset($inner_hits)) {
-			echo '<h3>Inner Hits</h3>';
-            echo '<pre>';
-            print_r($inner_hits);
-            echo '</pre>';
-        }
-	?>
+				<?php
+			        if (isset($inner_hits)) {
+						echo '<h3>Inner Hits</h3>';
+			            echo '<pre>';
+			            print_r($inner_hits);
+			            echo '</pre>';
+			        }
+				?>
+			</div>
+		</div>
+	</div><!-- /.container -->
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
