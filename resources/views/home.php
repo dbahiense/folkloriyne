@@ -60,7 +60,44 @@
 
 	<div class="container">
 
+		<div class="row">
+
+			<?php
+				if (isset($charts))
+				{
+					echo 'Category: '.$category;
+					echo '<br />';
+					echo 'Markets: '.$markets_chart;
+					echo '<br />';
+					echo 'Score: '.$score;
+					echo '<br />';
+					print $charts;
+				}
+			?>
+
+			<div class="col-xs-12">
+				<?php
+					if (isset($output))
+					{
+						print $output;
+					}
+				?>
+			</div>
+		</div>
 	</div><!-- /.container -->
+
+	<?php
+        if (isset($hits)) {
+			echo 'Hits: '.$hits;
+        }
+
+        if (isset($inner_hits)) {
+			echo '<h3>Inner Hits</h3>';
+            echo '<pre>';
+            print_r($inner_hits);
+            echo '</pre>';
+        }
+	?>
 
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -69,4 +106,3 @@
 
 </body>
 </html>
-
