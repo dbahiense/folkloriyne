@@ -97,7 +97,7 @@ class HomeController extends Controller
 
         // Output hits, results, etc.
         $output = '
-                <h3>Your search returned '.$results.'</h3>
+                <h3><strong>Your search returned '.$results.'</strong></h3>
 
                 <hr>';
 
@@ -280,10 +280,12 @@ class HomeController extends Controller
 
                 <div class="collapse collapse-name'.$i.'">
                     <p>
-                        <i class="fa fa-lg fa-user"></i> <strong>'.$name.'</strong> (<small><i class="fa fa-star-o" data-toggle="tooltip" data-placement="bottom" title="Date of birth."></i> '.$dob.'</small>)<br>
-                        <i class="fa fa-lg fa-"></i> Education: '.$education.'<br>
-                        <i class="fa fa-lg fa-"></i> Father\'s Name: '.$father_name.'<br>
-                        <i class="fa fa-lg fa-"></i> Occupation: '.$occupation.'<br>
+                        <span style="margin-top: 12px; margin-bottom: 16px;">
+                            <i class="fa fa-lg fa-user-o"></i> <strong>'.$name.'</strong> (<small><i class="fa fa-star-o" data-toggle="tooltip" data-placement="bottom" title="Date of birth."></i> '.$dob.'</small>)
+                        </span>
+                        <i class="fa fa-fw fa-male" data-toggle="tooltip" data-placement="bottom" title="Father\'s name"></i> '.$father_name.'<br>
+                        <i class="fa fa-fw fa-th-large" data-toggle="tooltip" data-placement="bottom" title="Occupation"></i> '.$occupation.'<br>
+                        <i class="fa fa-fw fa-university" data-toggle="tooltip" data-placement="bottom" title="Education"></i> '.$education.'<br>
                     </p>
                 </div>
 
