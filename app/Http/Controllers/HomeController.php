@@ -240,7 +240,7 @@ class HomeController extends Controller
                 $pob = '<small>N/A</small>';
             }
 
-
+            // Relevance score
             $_score = $inner_hits[$h]['_score'];
             $_score = $_score * 100;
             $_score = round($_score,0);
@@ -250,38 +250,46 @@ class HomeController extends Controller
 
                     <p>
                         <a aria-expanded="false" aria-controls="collapse-text'.$i.'" data-toggle="collapse" href=".collapse-text'.$i.'">
-                            <i class="fa fa-lg fa-plus-circle" data-toggle="tooltip" data-placement="bottom" title="Word count. Click to expand."></i>
+                            <i class="fa fa-lg fa-plus-circle" data-toggle="tooltip" data-placement="bottom" title="Word count. Click to read the full story."></i>
                         </a>
                         <small style="padding-right: 16px;">'.$word_count.'</small>
 
                         '.$a_name.'
                         <small style="padding-right: 16px;">'.$name.'</small>
 
-                        <i class="fa fa-lg fa-calendar" data-toggle="tooltip" data-placement="bottom" title="Date when the story was collect."></i> <small style="padding-right: 16px;">'.$year.'</small>
+                        <i class="fa fa-lg fa-calendar" data-toggle="tooltip" data-placement="bottom" title="Date when the story was collected."></i> <small style="padding-right: 16px;">'.$year.'</small>
 
                         '.$map.'
                         <small style="padding-right: 16px;">'.$place.$municipality.$country.'</small>
 
-                        <i class="text-danger fa fa-lg fa-heart-o"></i> <small style="padding-right: 16px;">0</small>
+                        <a href="">
+                            <i class="fa fa-lg fa-heart-o text-danger" data-toggle="tooltip" data-placement="bottom" title="Do you like this?"></i>
+                        </a>
+                        <small style="padding-right: 16px;">0</small>
+
+                        <span class="pull-right">
+                            <i class="fa fa-compass text-warning" data-toggle="tooltip" data-placement="bottom" title="Result relevance"></i>
+                            <small style="padding-right: 16px;">'.$_score.'</small>
+                        </span>
                     </p>
 
                 <div class="collapse collapse-text'.$i.'">
                     <p style="padding-top: 16px;">'.$text.'</p>
 
                     <p>
-                        <i class="fa fa-lg fa-folder-open-o"></i> '.$category.'<br>
+                        <i class="fa fa-lg fa-folder-open-o" data-toggle="tooltip" data-placement="bottom" title="Category"></i> '.$category.'<br>
                     </p>
 
                     <p>
-                        <i class="fa fa-lg fa-book"></i> <small style="padding-right: 16px;">'.$volume.'</small>
-                        <i class="fa fa-lg fa-file-text-o"></i> <small style="padding-right: 16px;">'.$page.'</small>
-                        <i class="fa fa-lg fa-hashtag"></i> <small style="padding-right: 16px;">'.$nr.'</small>
+                        <i class="fa fa-lg fa-book" data-toggle="tooltip" data-placement="bottom" title="Volume"></i> <small style="padding-right: 16px;">'.$volume.'</small>
+                        <i class="fa fa-lg fa-file-text-o" data-toggle="tooltip" data-placement="bottom" title="Page"></i> <small style="padding-right: 16px;">'.$page.'</small>
+                        <i class="fa fa-lg fa-hashtag" data-toggle="tooltip" data-placement="bottom" title="Story number"></i> <small style="padding-right: 16px;">'.$nr.'</small>
                     </p>
                 </div>
 
                 <div class="collapse collapse-name'.$i.'">
                     <p style="padding-top: 16px;">
-                        <i class="fa fa-lg fa-user-o"></i> <strong>'.$name.'</strong> (<small><i class="fa fa-star-o" data-toggle="tooltip" data-placement="bottom" title="Date of birth."></i> '.$dob.'</small>)
+                        <i class="fa fa-lg fa-user-o data-toggle="tooltip" data-placement="bottom" title="Storyteller name""></i> <strong>'.$name.'</strong> (<small><i class="fa fa-star-o" data-toggle="tooltip" data-placement="bottom" title="Date of birth"></i> '.$dob.'</small>)
                     </p>
                     <p>
                         <i class="fa fa-fw fa-male" data-toggle="tooltip" data-placement="bottom" title="Father\'s name"></i> '.$father_name.'<br>
