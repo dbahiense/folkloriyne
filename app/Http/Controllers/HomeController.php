@@ -265,7 +265,7 @@ class HomeController extends Controller
                     </p>
 
                 <div class="collapse collapse-text'.$i.'">
-                    <p>'.$text.'</p>
+                    <p style="padding-top: 16px;">'.$text.'</p>
 
                     <p>
                         <i class="fa fa-lg fa-folder-open-o"></i> '.$category.'<br>
@@ -279,10 +279,10 @@ class HomeController extends Controller
                 </div>
 
                 <div class="collapse collapse-name'.$i.'">
+                    <p style="padding-top: 16px;">
+                        <i class="fa fa-lg fa-user-o"></i> <strong>'.$name.'</strong> (<small><i class="fa fa-star-o" data-toggle="tooltip" data-placement="bottom" title="Date of birth."></i> '.$dob.'</small>)
+                    </p>
                     <p>
-                        <span style="margin-top: 12px; margin-bottom: 16px;">
-                            <i class="fa fa-lg fa-user-o"></i> <strong>'.$name.'</strong> (<small><i class="fa fa-star-o" data-toggle="tooltip" data-placement="bottom" title="Date of birth."></i> '.$dob.'</small>)
-                        </span>
                         <i class="fa fa-fw fa-male" data-toggle="tooltip" data-placement="bottom" title="Father\'s name"></i> '.$father_name.'<br>
                         <i class="fa fa-fw fa-th-large" data-toggle="tooltip" data-placement="bottom" title="Occupation"></i> '.$occupation.'<br>
                         <i class="fa fa-fw fa-university" data-toggle="tooltip" data-placement="bottom" title="Education"></i> '.$education.'<br>
