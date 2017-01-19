@@ -250,7 +250,7 @@ class HomeController extends Controller
 
                     <p>
                         <a aria-expanded="false" aria-controls="collapse-text'.$i.'" data-toggle="collapse" href=".collapse-text'.$i.'">
-                            <i class="fa fa-lg fa-chevron-circle-down text-success" data-toggle="tooltip" data-placement="bottom" title="Word count. Click to read the full story."></i>
+                            <i class="fa fa-lg fa-caret-square-o-down text-success" data-toggle="tooltip" data-placement="bottom" title="Word count. Click to read the full story."></i>
                         </a>
                         <small style="padding-right: 16px;">'.$word_count.'</small>
 
