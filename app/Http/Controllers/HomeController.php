@@ -97,37 +97,56 @@ class HomeController extends Controller
 
         // Output hits, results, etc.
         $output = '
-                <h3>Your search returned '.$results.'.</h3>
+                <h3>Your search returned '.$results.'</h3>
 
-                <table class="table table-bordered table-responsive table-striped">
-                    <thead>
-                        <th><i class="fa fa-hashtag"></i></th>
-                        <th>Category</th>
-                        <th>Title</th>
-                        <th>Volume</th>
-                        <th>Page</th>
-                        <th>Number</th>
-                        <th>Year</th>
-                        <th>Score</th>
-                        <th>Map</th>
-                    </thead>
-                    <tbody>';
+                <hr>';
 
         // Loop the array and concatenate (with $var .= 'value';) the $output variable.
         for ($h = 0; $h < $hits; $h++) {
 
             $i = $h + 1;
 
-            $category = $inner_hits[$h]['_source']['category'];
-            if (empty($category))
-            {
-                $category = '<small>N/A</small>';
-            }
-
             $title = $inner_hits[$h]['_source']['title'];
             if (empty($title))
             {
                 $title = '<small>N/A</small>';
+            }
+
+            $name = $inner_hits[$h]['_source']['name'];
+            if (empty($name))
+            {
+                $name = '<small>N/A</small>';
+            }
+
+            $place = $inner_hits[$h]['_source']['place'];
+            if (empty($place))
+            {
+                $place = '';
+            }
+
+            $municipality = ', '.$inner_hits[$h]['_source']['municipality'];
+            if ($municipality == ', ')
+            {
+                $municipality = '';
+            }
+
+            $country = ', '.$inner_hits[$h]['_source']['country'];
+            if ($country == ', ')
+            {
+                $country = '';
+            }
+
+            if (empty($place) AND empty($municipality) AND empty($country))
+            {
+                $place = '<small>N/A</small>';
+                $municipality = '';
+                $country = '';
+            }
+
+            $category = $inner_hits[$h]['_source']['category'];
+            if (empty($category))
+            {
+                $category = '<small>N/A</small>';
             }
 
             $volume = $inner_hits[$h]['_source']['volume'];
@@ -162,7 +181,7 @@ class HomeController extends Controller
 
             $lon = $inner_hits[$h]['_source']['lon'];
 
-            $map = '<a href="https://www.google.com.br/maps/place//@'.$lat.','.$lon.',9z/data=!4m5!3m4!1s0x0:0x0!8m2!3d'.$lat.'!4d'.$lon.'" target="_blank"><i class="fa fa-map-marker"></i></a>';
+            $map = '<a href="https://www.google.com/maps/place//@'.$lat.','.$lon.',9z/data=!4m5!3m4!1s0x0:0x0!8m2!3d'.$lat.'!4d'.$lon.'" target="_blank"><i class="fa fa-map-marker"></i></a>';
 
             if (empty($lat) or empty($lon))
             {
@@ -171,27 +190,44 @@ class HomeController extends Controller
 
 
             $text = $inner_hits[$h]['_source']['text'];
+            $word_count = str_word_count($text);
             if (empty($text))
             {
-                $text = '<small>N/A</small>';
+                $text = 'N/A';
+                $word_count = '<small>N/A</small>';
             }
 
             $output .= '
-                <tr>
-                    <td>'.$i.'</td>
-                    <td>'.$category.'</td>
-                    <td>'.$title.'</td>
-                    <td>'.$volume.'</td>
-                    <td>'.$page.'</td>
-                    <td>'.$nr.'</td>
-                    <td>'.$year.'</td>
-                    <td>'.$_score.'</td>
-                    <td>'.$map.'</td>';
+                <h3>'.$i.'. '.$title.'</h3>
+
+                    <p>
+                        <a aria-expanded="false" aria-controls="collapse-text'.$i.'" data-toggle="collapse" href=".collapse-text'.$i.'" style="padding-right: 16px;">
+                            <i class="fa fa-plus-circle" data-toggle="tooltip" data-placement="bottom" title="Word count. Click to expand."></i> <small>'.$word_count.'</small>
+                        </a>
+
+                        <i class="fa fa-user"></i> <small style="padding-right: 16px;">'.$name.'</small>
+                        <i class="fa fa-calendar"></i> <small style="padding-right: 16px;">'.$year.'</small>
+                        '.$map.' <small style="padding-right: 16px;">'.$place.$municipality.$country.'</small>
+                        <i class="fa fa-heart-o"></i> <small style="padding-right: 16px;">0</small>
+                    </p>
+
+                <div class="collapse collapse-text'.$i.'">
+                    <p>'.$text.'</p>
+
+                    <p>
+                        <i class="fa fa-folder-open-o"></i> '.$category.'<br>
+                    </p>
+
+                    <p>
+                        <i class="fa fa-book"></i> <small style="padding-right: 16px;">'.$volume.'</small>
+                        <i class="fa fa-file-text-o"></i> <small style="padding-right: 16px;">'.$page.'</small>
+                        <i class="fa fa-hashtag"></i> <small style="padding-right: 16px;">'.$nr.'</small>
+                    </p>
+                </div>
+
+                <hr>';
         }
 
-        $output .= '
-                    </tbody>
-                </table>';
 
         // Return output and pass it to the view.
         return view('home', ['inner_hits' => $inner_hits, 'output' => $output]);
