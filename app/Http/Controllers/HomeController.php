@@ -262,7 +262,7 @@ class HomeController extends Controller
                         '.$map.'
                         <small style="padding-right: 16px;">'.$place.$municipality.$country.'</small>
 
-                        <a href=";javascript">
+                        <a data-target=".heart" data-toggle="modal">
                             <i class="fa fa-lg fa-heart-o text-danger" data-toggle="tooltip" data-placement="bottom" title="Do you like this?"></i>
                         </a>
                         <small style="padding-right: 16px;">0</small>
