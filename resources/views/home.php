@@ -48,8 +48,8 @@
 	<div class="container" style="margin-bottom: 16px;">
 		<div class="row">
 			<div class="col-xs-12">
-				<form action="/post" class="form-inline" method="post" name="form" role="form">
-					<div class="input-group input-group-lg" style="width: 100%;">
+				<form action="/post" class="" method="post" name="form" role="form">
+					<div class="input-group input-group-lg">
 						<input class="form-control" id="input" name="input" type="text" />
 						<span class="input-group-btn">
 							<button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
