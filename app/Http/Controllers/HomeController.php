@@ -114,6 +114,7 @@ class HomeController extends Controller
 
 
             $text = $inner_hits[$h]['_source']['text'];
+            $text = nl2br($text);
             $word_count = str_word_count($text);
             if (empty($text))
             {
