@@ -101,7 +101,7 @@ class HomeController extends Controller
 
                 <hr>';
 
-        // Loop the array and concatenate (with $var .= 'value';) the $output variable.
+        // Loop the array and get the variables.
         for ($h = 0; $h < $hits; $h++) {
 
             $i = $h + 1;
@@ -112,12 +112,47 @@ class HomeController extends Controller
                 $title = '<small>N/A</small>';
             }
 
+
+            $text = $inner_hits[$h]['_source']['text'];
+            $word_count = str_word_count($text);
+            if (empty($text))
+            {
+                $text = 'N/A';
+                $word_count = '<small>N/A</small>';
+            }
+
+            // Storyteller
             $name = $inner_hits[$h]['_source']['name'];
+            $a_name = '
+                <a aria-expanded="false" aria-controls="collapse-name'.$i.'" data-toggle="collapse" href=".collapse-name'.$i.'">
+                    <i class="fa fa-lg fa-user" data-toggle="tooltip" data-placement="bottom" title="Storyteller. Click to more information."></i>
+                </a>';
             if (empty($name))
             {
+                $a_name = '<i class="fa fa-lg fa-user" title="Storyteller not available."></i>';
                 $name = '<small>N/A</small>';
             }
 
+            // Year
+            $year = $inner_hits[$h]['_source']['year'];
+            if (empty($year))
+            {
+                $year = '<small>N/A</small>';
+            }
+
+            // Coordinates, latittude and longitude
+            $lat = $inner_hits[$h]['_source']['lat'];
+            $lon = $inner_hits[$h]['_source']['lon'];
+
+            // Map
+            $map = '<a href="https://www.google.com/maps/place//@'.$lat.','.$lon.',9z/data=!4m5!3m4!1s0x0:0x0!8m2!3d'.$lat.'!4d'.$lon.'" target="_blank"><i class="fa fa-lg fa-map-o" data-toggle="tooltip" data-placement="bottom" title="Location where the story was collected. Click to see the location on a map."></i></a>';
+
+            if (empty($lat) OR empty($lon))
+            {
+                $map = '<i class="fa fa-lg fa-map-o" data-toggle="tooltip" data-placement="bottom" title="Location where the story was collected."></i>';
+            }
+
+            // Place
             $place = $inner_hits[$h]['_source']['place'];
             if (empty($place))
             {
@@ -143,85 +178,112 @@ class HomeController extends Controller
                 $country = '';
             }
 
+            // Category
             $category = $inner_hits[$h]['_source']['category'];
             if (empty($category))
             {
                 $category = '<small>N/A</small>';
             }
 
+            // Volume
             $volume = $inner_hits[$h]['_source']['volume'];
             if (empty($volume))
             {
                 $volume = '<small>N/A</small>';
             }
 
+            // Page
             $page = $inner_hits[$h]['_source']['page'];
             if (empty($page))
             {
                 $page = '<small>N/A</small>';
             }
 
+            // Number
             $nr = $inner_hits[$h]['_source']['nr'];
             if (empty($nr))
             {
                 $nr = '<small>N/A</small>';
             }
 
-            $year = $inner_hits[$h]['_source']['year'];
-            if (empty($year))
+
+            // Information about the storyteller.
+            // Date of birth.
+            $dob = $inner_hits[$h]['_source']['dob'];
+            if (empty($dob))
             {
-                $year = '<small>N/A</small>';
+                $dob = '<small>N/A</small>';
             }
+            // Education
+            $education = $inner_hits[$h]['_source']['education'];
+            if (empty($education))
+            {
+                $education = '<small>N/A</small>';
+            }
+            // Father's name
+            $father_name = $inner_hits[$h]['_source']['father_name'];
+            if (empty($father_name))
+            {
+                $father_name = '<small>N/A</small>';
+            }
+            // Occupation
+            $occupation = $inner_hits[$h]['_source']['occupation'];
+            if (empty($occupation))
+            {
+                $occupation = '<small>N/A</small>';
+            }
+            // Place of birth
+            $pob = $inner_hits[$h]['_source']['pob'];
+            if (empty($pob))
+            {
+                $pob = '<small>N/A</small>';
+            }
+
 
             $_score = $inner_hits[$h]['_score'];
             $_score = $_score * 100;
             $_score = round($_score,0);
 
-            $lat = $inner_hits[$h]['_source']['lat'];
-
-            $lon = $inner_hits[$h]['_source']['lon'];
-
-            $map = '<a href="https://www.google.com/maps/place//@'.$lat.','.$lon.',9z/data=!4m5!3m4!1s0x0:0x0!8m2!3d'.$lat.'!4d'.$lon.'" target="_blank"><i class="fa fa-map-marker"></i></a>';
-
-            if (empty($lat) or empty($lon))
-            {
-                $map = '<i class="fa fa-map-marker"></i>';
-            }
-
-
-            $text = $inner_hits[$h]['_source']['text'];
-            $word_count = str_word_count($text);
-            if (empty($text))
-            {
-                $text = 'N/A';
-                $word_count = '<small>N/A</small>';
-            }
-
             $output .= '
                 <h3>'.$i.'. '.$title.'</h3>
 
                     <p>
-                        <a aria-expanded="false" aria-controls="collapse-text'.$i.'" data-toggle="collapse" href=".collapse-text'.$i.'" style="padding-right: 16px;">
-                            <i class="fa fa-plus-circle" data-toggle="tooltip" data-placement="bottom" title="Word count. Click to expand."></i> <small>'.$word_count.'</small>
+                        <a aria-expanded="false" aria-controls="collapse-text'.$i.'" data-toggle="collapse" href=".collapse-text'.$i.'">
+                            <i class="fa fa-lg fa-plus-circle" data-toggle="tooltip" data-placement="bottom" title="Word count. Click to expand."></i>
                         </a>
+                        <small style="padding-right: 16px;">'.$word_count.'</small>
 
-                        <i class="fa fa-user"></i> <small style="padding-right: 16px;">'.$name.'</small>
-                        <i class="fa fa-calendar"></i> <small style="padding-right: 16px;">'.$year.'</small>
-                        '.$map.' <small style="padding-right: 16px;">'.$place.$municipality.$country.'</small>
-                        <i class="fa fa-heart-o"></i> <small style="padding-right: 16px;">0</small>
+                        '.$a_name.'
+                        <small style="padding-right: 16px;">'.$name.'</small>
+
+                        <i class="fa fa-lg fa-calendar" data-toggle="tooltip" data-placement="bottom" title="Date when the story was collect."></i> <small style="padding-right: 16px;">'.$year.'</small>
+
+                        '.$map.'
+                        <small style="padding-right: 16px;">'.$place.$municipality.$country.'</small>
+
+                        <i class="text-danger fa fa-lg fa-heart-o"></i> <small style="padding-right: 16px;">0</small>
                     </p>
 
                 <div class="collapse collapse-text'.$i.'">
                     <p>'.$text.'</p>
 
                     <p>
-                        <i class="fa fa-folder-open-o"></i> '.$category.'<br>
+                        <i class="fa fa-lg fa-folder-open-o"></i> '.$category.'<br>
                     </p>
 
                     <p>
-                        <i class="fa fa-book"></i> <small style="padding-right: 16px;">'.$volume.'</small>
-                        <i class="fa fa-file-text-o"></i> <small style="padding-right: 16px;">'.$page.'</small>
-                        <i class="fa fa-hashtag"></i> <small style="padding-right: 16px;">'.$nr.'</small>
+                        <i class="fa fa-lg fa-book"></i> <small style="padding-right: 16px;">'.$volume.'</small>
+                        <i class="fa fa-lg fa-file-text-o"></i> <small style="padding-right: 16px;">'.$page.'</small>
+                        <i class="fa fa-lg fa-hashtag"></i> <small style="padding-right: 16px;">'.$nr.'</small>
+                    </p>
+                </div>
+
+                <div class="collapse collapse-name'.$i.'">
+                    <p>
+                        <i class="fa fa-lg fa-user"></i> <strong>'.$name.'</strong> (<small><i class="fa fa-star-o" data-toggle="tooltip" data-placement="bottom" title="Date of birth."></i> '.$dob.'</small>)<br>
+                        <i class="fa fa-lg fa-"></i> Education: '.$education.'<br>
+                        <i class="fa fa-lg fa-"></i> Father\'s Name: '.$father_name.'<br>
+                        <i class="fa fa-lg fa-"></i> Occupation: '.$occupation.'<br>
                     </p>
                 </div>
 
