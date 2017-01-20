@@ -81,10 +81,15 @@ class HomeController extends Controller
         // How many hits are returned?
         $hits = count($inner_hits);
 
-        // Your search returned X results.
+        $time = microtime(true) - $_SERVER["REQUEST_TIME_FLOAT"];
+        $time = round($time, 4);
+        $time = ' in '.$time.' seconds';
+
+        // Your search returned X results
         if ($hits == 0)
         {
             $results = 'no results';
+            $time = '';
         }
         elseif ($hits == 1)
         {
@@ -96,8 +101,11 @@ class HomeController extends Controller
         }
 
         // Output hits, results, etc.
+        // To singular or plural of second see: http://ell.stackexchange.com/questions/7817/singular-or-plural-for-seconds
         $output = '
-                <h3><strong>Your search returned '.$results.'</strong></h3>
+                <p style="color: #aaa;">Your search returned '.$results.$time.'.</p>
+
+                <h3>Search Results:</h3>
 
                 <hr>';
 
@@ -246,7 +254,7 @@ class HomeController extends Controller
             $_score = round($_score,0);
 
             $output .= '
-                <h3>'.$i.'. '.$title.'</h3>
+                <p class="lead">'.$i.'. '.$title.'</p>
 
                     <p>
                         <a aria-expanded="false" aria-controls="collapse-text'.$i.'" data-toggle="collapse" href=".collapse-text'.$i.'">
@@ -301,8 +309,7 @@ class HomeController extends Controller
                 <hr>';
         }
 
-
         // Return output and pass it to the view.
-        return view('home', ['inner_hits' => $inner_hits, 'output' => $output]);
+        return view('home', ['inner_hits' => $inner_hits, 'output' => $output, 'time' => $time]);
     }
 }

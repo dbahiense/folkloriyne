@@ -66,7 +66,7 @@
 		</div><!-- /.container -->
 	</nav>
 
-	<div class="container" style="margin-bottom: 16px;">
+	<div class="container" style="margin-bottom: 16px; padding-top: 32px;">
 		<div class="row">
 			<div class="col-xs-12">
 				<form action="/post" class="" method="post" name="form" role="form">
@@ -94,7 +94,7 @@
 		</div>
 	</div><!-- /.container -->
 
-	<div class="container fluid">
+	<div class="container">
 		<div class="row">
 			<div class="col-xs-12">
 
