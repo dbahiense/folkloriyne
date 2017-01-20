@@ -134,11 +134,11 @@ class HomeController extends Controller
             $name = $inner_hits[$h]['_source']['name'];
             $a_name = '
                 <a aria-expanded="false" aria-controls="collapse-name'.$i.'" data-toggle="collapse" href=".collapse-name'.$i.'">
-                    <i class="fa fa-lg fa-user" data-toggle="tooltip" data-placement="bottom" title="Storyteller. Click to more information."></i>
+                    <i class="fa fa-lg fa-user-o" data-toggle="tooltip" data-placement="bottom" title="Storyteller. Click to more information."></i>
                 </a>';
             if (empty($name))
             {
-                $a_name = '<i class="fa fa-lg fa-user" title="Storyteller not available."></i>';
+                $a_name = '<i class="fa fa-lg fa-user-o" title="Storyteller not available."></i>';
                 $name = '<small>N/A</small>';
             }
 
@@ -160,6 +160,7 @@ class HomeController extends Controller
             {
                 $map = '<i class="fa fa-lg fa-map-o" data-toggle="tooltip" data-placement="bottom" title="Location where the story was collected."></i>';
             }
+
 
             // Place
             $place = $inner_hits[$h]['_source']['place'];
@@ -187,6 +188,7 @@ class HomeController extends Controller
                 $country = '';
             }
 
+
             // Category
             $category = $inner_hits[$h]['_source']['category'];
             if (empty($category))
@@ -194,6 +196,7 @@ class HomeController extends Controller
                 $category = '<small>N/A</small>';
             }
 
+            // Bibliographic information
             // Volume
             $volume = $inner_hits[$h]['_source']['volume'];
             if (empty($volume))
@@ -216,12 +219,33 @@ class HomeController extends Controller
             }
 
 
-            // Information about the storyteller.
+            // Information about the storyteller
+            // Sex
+            $sex = $inner_hits[$h]['_source']['sex'];
+            if (empty($sex))
+            {
+                $sex = '<i class="fa fa-fw fa-genderless" data-toggle="tooltip" data-placement="bottom" title="Gender N/A"></i> <small>N/A</small>';
+            }
+            elseif ($sex = 'M')
+            {
+                $sex = '<i class="fa fa-fw fa-mars" data-toggle="tooltip" data-placement="bottom" title="Gender"></i> <small>Male</small>';
+            }
+            else
+            {
+                $sex = '<i class="fa fa-fw fa-venus" data-toggle="tooltip" data-placement="bottom" title="Gender"></i> <small>Female</small>';
+            }
+
             // Date of birth.
             $dob = $inner_hits[$h]['_source']['dob'];
             if (empty($dob))
             {
                 $dob = '<small>N/A</small>';
+            }
+            // Date of birth.
+            $pob = $inner_hits[$h]['_source']['pob'];
+            if (empty($pob))
+            {
+                $pob = '<small>N/A</small>';
             }
             // Education
             $education = $inner_hits[$h]['_source']['education'];
@@ -292,17 +316,26 @@ class HomeController extends Controller
                         <i class="fa fa-lg fa-book" data-toggle="tooltip" data-placement="bottom" title="Volume"></i> <small style="padding-right: 16px;">'.$volume.'</small>
                         <i class="fa fa-lg fa-file-text-o" data-toggle="tooltip" data-placement="bottom" title="Page"></i> <small style="padding-right: 16px;">'.$page.'</small>
                         <i class="fa fa-lg fa-hashtag" data-toggle="tooltip" data-placement="bottom" title="Story number"></i> <small style="padding-right: 16px;">'.$nr.'</small>
+                        '.$a_name.'
+                        <small style="padding-right: 16px;">'.$name.'</small>
+
                     </p>
                 </div>
 
                 <div class="collapse collapse-name'.$i.'">
                     <p style="padding-top: 16px;">
-                        <i class="fa fa-lg fa-user-o data-toggle="tooltip" data-placement="bottom" title="Storyteller name""></i> <strong>'.$name.'</strong> (<small><i class="fa fa-star-o" data-toggle="tooltip" data-placement="bottom" title="Date of birth"></i> '.$dob.'</small>)
+                        <strong>'.$name.'</strong>
+                        (<i class="fa fa-star-o" data-toggle="tooltip" data-placement="bottom" title="Birth"></i>
+                            <small>'.$dob.' in '.$pob.'</small>)
                     </p>
                     <p>
-                        <i class="fa fa-fw fa-male" data-toggle="tooltip" data-placement="bottom" title="Father\'s name"></i> '.$father_name.'<br>
-                        <i class="fa fa-fw fa-th-large" data-toggle="tooltip" data-placement="bottom" title="Occupation"></i> '.$occupation.'<br>
-                        <i class="fa fa-fw fa-university" data-toggle="tooltip" data-placement="bottom" title="Education"></i> '.$education.'<br>
+                        '.$sex.'<br>
+                        <i class="fa fa-fw fa-male" data-toggle="tooltip" data-placement="bottom" title="Father\'s name"></i>
+                            <small style="padding-right: 16px;">'.$father_name.'</small><br>
+                        <i class="fa fa-fw fa-university" data-toggle="tooltip" data-placement="bottom" title="Education"></i>
+                            <small style="padding-right: 16px;">'.$education.'</small><br>
+                        <i class="fa fa-fw fa-th-large" data-toggle="tooltip" data-placement="bottom" title="Occupation"></i>
+                            <small style="padding-right: 16px;">'.$occupation.'</small>
                     </p>
                 </div>
 
