@@ -22,14 +22,11 @@ class HomeController extends Controller
             '127.0.0.1:9200'
         ];
 
-
         // Instantiate a new client, set hosts and build it
         $client = Elasticsearch\ClientBuilder::create()
                                                 ->setHosts($hosts)
                                                 ->build();
-
         // Set the query parameters.
-
         // Parameters.
         $parameters = [
             'index' => 'folklor',
@@ -81,6 +78,7 @@ class HomeController extends Controller
         // How many hits are returned?
         $hits = count($inner_hits);
 
+        // How long took the search?
         $time = microtime(true) - $_SERVER["REQUEST_TIME_FLOAT"];
         $time = round($time, 4);
         $time = ' in '.$time.' seconds';
@@ -114,13 +112,14 @@ class HomeController extends Controller
 
             $i = $h + 1;
 
+            // Story title
             $title = $inner_hits[$h]['_source']['title'];
             if (empty($title))
             {
                 $title = '<small>N/A</small>';
             }
 
-
+            // Story text
             $text = $inner_hits[$h]['_source']['text'];
             $text = nl2br($text);
             $word_count = str_word_count($text);
@@ -128,18 +127,6 @@ class HomeController extends Controller
             {
                 $text = 'N/A';
                 $word_count = '<small>N/A</small>';
-            }
-
-            // Storyteller
-            $name = $inner_hits[$h]['_source']['name'];
-            $a_name = '
-                <a aria-expanded="false" aria-controls="collapse-name'.$i.'" data-toggle="collapse" href=".collapse-name'.$i.'">
-                    <i class="fa fa-lg fa-user-o" data-toggle="tooltip" data-placement="bottom" title="Storyteller. Click to more information."></i>
-                </a>';
-            if (empty($name))
-            {
-                $a_name = '<i class="fa fa-lg fa-user-o" title="Storyteller not available."></i>';
-                $name = '<small>N/A</small>';
             }
 
             // Year
@@ -152,15 +139,13 @@ class HomeController extends Controller
             // Coordinates, latittude and longitude
             $lat = $inner_hits[$h]['_source']['lat'];
             $lon = $inner_hits[$h]['_source']['lon'];
-
-            // Map
+            // Map link
             $map = '<a href="https://www.google.com/maps/place//@'.$lat.','.$lon.',9z/data=!4m5!3m4!1s0x0:0x0!8m2!3d'.$lat.'!4d'.$lon.'" target="_blank"><i class="fa fa-lg fa-map-o" data-toggle="tooltip" data-placement="bottom" title="Location where the story was collected. Click to see the location on a map."></i></a>';
 
             if (empty($lat) OR empty($lon))
             {
                 $map = '<i class="fa fa-lg fa-map-o" data-toggle="tooltip" data-placement="bottom" title="Location where the story was collected."></i>';
             }
-
 
             // Place
             $place = $inner_hits[$h]['_source']['place'];
@@ -220,6 +205,28 @@ class HomeController extends Controller
 
 
             // Information about the storyteller
+            // Name
+            $name = $inner_hits[$h]['_source']['name'];
+
+            // Date of birth
+            $dob = $inner_hits[$h]['_source']['dob'];
+            // Place of birth
+            $pob = $inner_hits[$h]['_source']['pob'];
+            // Birth information
+            $birth_info = '(<i class="fa fa-star-o" data-toggle="tooltip" data-placement="bottom" title="Birth"></i> <small>'.$dob.' in '.$pob.'</small>)';
+            if (empty($dob))
+            {
+                $birth_info = '(<i class="fa fa-star-o" data-toggle="tooltip" data-placement="bottom" title="Birth"></i> <small>'.$pob.'</small>)';
+            }
+            elseif (empty($pob))
+            {
+                $birth_info = '(<i class="fa fa-star-o" data-toggle="tooltip" data-placement="bottom" title="Birth"></i> <small>'.$dob.'</small>)';
+            }
+            elseif (empty($dob) AND empty($pod))
+            {
+                $birth_info = '';
+            }
+
             // Sex
             $sex = $inner_hits[$h]['_source']['sex'];
             if (empty($sex))
@@ -235,18 +242,6 @@ class HomeController extends Controller
                 $sex = '<i class="fa fa-fw fa-venus" data-toggle="tooltip" data-placement="bottom" title="Gender"></i> <small>Female</small>';
             }
 
-            // Date of birth.
-            $dob = $inner_hits[$h]['_source']['dob'];
-            if (empty($dob))
-            {
-                $dob = '<small>N/A</small>';
-            }
-            // Date of birth.
-            $pob = $inner_hits[$h]['_source']['pob'];
-            if (empty($pob))
-            {
-                $pob = '<small>N/A</small>';
-            }
             // Education
             $education = $inner_hits[$h]['_source']['education'];
             if (empty($education))
@@ -272,6 +267,31 @@ class HomeController extends Controller
                 $pob = '<small>N/A</small>';
             }
 
+            // Storyteller bibliographical information
+            $storyteller = '
+                <p style="padding-top: 12px;">
+                    <i class="fa fa-lg fa-user-o" data-toggle="tooltip" data-placement="bottom" title="Storyteller biographical information"></i>
+                    <strong>'.$name.'</strong> '.$birth_info.'
+                </p>
+
+                <p>
+                    '.$sex.'<br>
+
+                    <i class="fa fa-fw fa-male" data-toggle="tooltip" data-placement="bottom" title="Father\'s name"></i>
+                        <small style="padding-right: 16px;">'.$father_name.'</small><br>
+
+                    <i class="fa fa-fw fa-university" data-toggle="tooltip" data-placement="bottom" title="Education"></i>
+                        <small style="padding-right: 16px;">'.$education.'</small><br>
+
+                    <i class="fa fa-fw fa-th-large" data-toggle="tooltip" data-placement="bottom" title="Occupation"></i>
+                        <small style="padding-right: 16px;">'.$occupation.'</small>
+                </p>';
+
+            if (empty($name))
+            {
+                $storyteller = '';
+            }
+
             // Relevance score
             $_score = $inner_hits[$h]['_score'];
             $_score = $_score * 100;
@@ -280,30 +300,27 @@ class HomeController extends Controller
             $output .= '
                 <p class="lead">'.$i.'. '.$title.'</p>
 
-                    <p>
-                        <a aria-expanded="false" aria-controls="collapse-text'.$i.'" data-toggle="collapse" href=".collapse-text'.$i.'">
-                            <i class="fa fa-lg fa-plus-circle text-success" data-toggle="tooltip" data-placement="bottom" title="Word count. Click to read the full story."></i>
-                        </a>
-                        <small style="padding-right: 16px;">'.$word_count.'</small>
+                <p>
+                    <a aria-expanded="false" aria-controls="collapse-text'.$i.'" data-toggle="collapse" href=".collapse-text'.$i.'">
+                        <i class="fa fa-lg fa-plus-circle text-success" data-toggle="tooltip" data-placement="bottom" title="Word count. Click to read the full story and see more information."></i>
+                    </a>
+                    <small style="padding-right: 16px;">'.$word_count.'</small>
 
-                        '.$a_name.'
-                        <small style="padding-right: 16px;">'.$name.'</small>
+                    <i class="fa fa-lg fa-calendar" data-toggle="tooltip" data-placement="bottom" title="Date when the story was collected."></i> <small style="padding-right: 16px;">'.$year.'</small>
 
-                        <i class="fa fa-lg fa-calendar" data-toggle="tooltip" data-placement="bottom" title="Date when the story was collected."></i> <small style="padding-right: 16px;">'.$year.'</small>
+                    '.$map.'
+                    <small style="padding-right: 16px;">'.$place.$municipality.$country.'</small>
 
-                        '.$map.'
-                        <small style="padding-right: 16px;">'.$place.$municipality.$country.'</small>
+                    <a href=".heart" data-target=".heart" data-toggle="modal">
+                        <i class="fa fa-lg fa-heart-o text-danger" data-toggle="tooltip" data-placement="bottom" title="Do you like this?"></i>
+                    </a>
+                    <small style="padding-right: 16px;">0</small>
 
-                        <a data-target=".heart" data-toggle="modal">
-                            <i class="fa fa-lg fa-heart-o text-danger" data-toggle="tooltip" data-placement="bottom" title="Do you like this?"></i>
-                        </a>
-                        <small style="padding-right: 16px;">0</small>
-
-                        <span class="pull-right">
-                            <i class="fa fa-compass text-warning" data-toggle="tooltip" data-placement="bottom" title="Result relevance"></i>
-                            <small style="padding-right: 16px;">'.$_score.'</small>
-                        </span>
-                    </p>
+                    <span class="pull-right">
+                        <i class="fa fa-compass text-warning" data-toggle="tooltip" data-placement="bottom" title="Result relevance"></i>
+                        <small style="padding-right: 16px;">'.$_score.'</small>
+                    </span>
+                </p>
 
                 <div class="collapse collapse-text'.$i.'">
                     <p style="padding-top: 16px;">'.$text.'</p>
@@ -314,29 +331,14 @@ class HomeController extends Controller
 
                     <p>
                         <i class="fa fa-lg fa-book" data-toggle="tooltip" data-placement="bottom" title="Volume"></i> <small style="padding-right: 16px;">'.$volume.'</small>
+
                         <i class="fa fa-lg fa-file-text-o" data-toggle="tooltip" data-placement="bottom" title="Page"></i> <small style="padding-right: 16px;">'.$page.'</small>
+
                         <i class="fa fa-lg fa-hashtag" data-toggle="tooltip" data-placement="bottom" title="Story number"></i> <small style="padding-right: 16px;">'.$nr.'</small>
-                        '.$a_name.'
-                        <small style="padding-right: 16px;">'.$name.'</small>
+                    </p>
 
-                    </p>
-                </div>
+                    '.$storyteller.'
 
-                <div class="collapse collapse-name'.$i.'">
-                    <p style="padding-top: 16px;">
-                        <strong>'.$name.'</strong>
-                        (<i class="fa fa-star-o" data-toggle="tooltip" data-placement="bottom" title="Birth"></i>
-                            <small>'.$dob.' in '.$pob.'</small>)
-                    </p>
-                    <p>
-                        '.$sex.'<br>
-                        <i class="fa fa-fw fa-male" data-toggle="tooltip" data-placement="bottom" title="Father\'s name"></i>
-                            <small style="padding-right: 16px;">'.$father_name.'</small><br>
-                        <i class="fa fa-fw fa-university" data-toggle="tooltip" data-placement="bottom" title="Education"></i>
-                            <small style="padding-right: 16px;">'.$education.'</small><br>
-                        <i class="fa fa-fw fa-th-large" data-toggle="tooltip" data-placement="bottom" title="Occupation"></i>
-                            <small style="padding-right: 16px;">'.$occupation.'</small>
-                    </p>
                 </div>
 
                 <hr>';
