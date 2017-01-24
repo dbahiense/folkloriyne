@@ -83,7 +83,7 @@ class HomeController extends Controller
         $time = round($time, 4);
         $time = ' in '.$time.' seconds';
 
-        // Your search returned X results
+        // Your search returned X results...
         if ($hits == 0)
         {
             $results = 'no results';
@@ -98,14 +98,15 @@ class HomeController extends Controller
             $results = $hits.' results';
         }
 
+        $performance = 'Your search returned '.$results.$time.'.';
+
+        $search_results = 'Search Results:';
+
+        $hr = '<hr>';
+
         // Output hits, results, etc.
         // To singular or plural of second see: http://ell.stackexchange.com/questions/7817/singular-or-plural-for-seconds
-        $output = '
-                <p style="color: #aaa;">Your search returned '.$results.$time.'.</p>
-
-                <h3>Search Results:</h3>
-
-                <hr>';
+        $output = '<hr>';
 
         // Loop the array and get the variables.
         for ($h = 0; $h < $hits; $h++) {
@@ -267,10 +268,10 @@ class HomeController extends Controller
                 $pob = '<small>N/A</small>';
             }
 
-            // Storyteller bibliographical information
+            // Basic information about the storyteller
             $storyteller = '
                 <p style="padding-top: 12px;">
-                    <i class="fa fa-lg fa-user-o" data-toggle="tooltip" data-placement="bottom" title="Storyteller biographical information"></i>
+                    <i class="fa fa-lg fa-user-o" data-toggle="tooltip" data-placement="bottom" title="Basic information about the storyteller"></i>
                     <strong>'.$name.'</strong> '.$birth_info.'
                 </p>
 
@@ -344,7 +345,80 @@ class HomeController extends Controller
                 <hr>';
         }
 
+        // Aggregations
+        $aggregations = $search['aggregations'];
+
+        // Storytellers
+        $tellers = $aggregations['tellers']['buckets'];
+        $tellers_hits = count($tellers);
+
+        $tellers_count = '
+            <div style="padding-bottom: 8px;">
+                <a aria-expanded="false" aria-controls="collapse-tellers" data-toggle="collapse" href=".collapse-tellers">
+                    <h4>
+                        <i class="fa fa-lg fa-fw fa-user-circle" data-toggle="tooltip" data-placement="bottom" title=""></i> Storytellers ('.$tellers_hits.')
+                    </h4>
+                </a>
+
+                <div class="collapse collapse-tellers">
+                    <table class="table table-condensed table-hover">
+                        <tbody>';
+
+        for ($h = 0; $h < $tellers_hits; $h++) {
+            $teller = $tellers[$h]['key'];
+            $count = $tellers[$h]['doc_count'];
+            $tellers_count .= '<tr><td>'.$teller.'</td><td>'.$count.'</td></tr>';
+        }
+
+        $tellers_count .= '
+                        </tbody>
+                    </table>
+                </div>
+            </div>';
+
+
+        // Places
+        $places = $aggregations['places']['buckets'];
+        $places_hits = count($places);
+
+        $places_count = '
+            <div style="padding-bottom: 8px;">
+                <a aria-expanded="false" aria-controls="collapse-places" data-toggle="collapse" href=".collapse-places">
+                    <h4>
+                        <i class="fa fa-lg fa-fw fa-map-marker" data-toggle="tooltip" data-placement="bottom" title=""></i> Places ('.$places_hits.')
+                    </h4>
+                </a>
+
+                <div class="collapse collapse-places">
+                    <table class="table table-condensed table-hover">
+                        <tbody>';
+
+        for ($h = 0; $h < $places_hits; $h++) {
+            $place = $places[$h]['key'];
+            $count = $places[$h]['doc_count'];
+            $places_count .= '<tr><td>'.$place.'</td><td>'.$count.'</td></tr>';
+        }
+
+        $places_count .= '
+                        </tbody>
+                    </table>
+                </div>
+            </div>';
+
+
         // Return output and pass it to the view.
-        return view('home', ['inner_hits' => $inner_hits, 'output' => $output, 'time' => $time]);
+        return view('home', [
+            'search' => $search,
+            'performance' => $performance,
+            'search_results' => $search_results,
+            'output' => $output,
+            'aggregations' => $aggregations,
+            'tellers' => $tellers,
+            'tellers_hits' => $tellers_hits,
+            'tellers_count' => $tellers_count,
+            'places' => $places,
+            'places_hits' => $places_hits,
+            'places_count' => $places_count
+        ]);
     }
 }

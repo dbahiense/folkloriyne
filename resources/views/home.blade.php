@@ -66,7 +66,7 @@
 		</div><!-- /.container -->
 	</nav>
 
-	<div class="container" style="margin-bottom: 16px; padding-top: 32px;">
+	<div class="container">
 		<div class="row">
 			<div class="col-xs-12">
 				<form action="/post" class="" method="post" name="form" role="form">
@@ -81,9 +81,15 @@
 		</div>
 	</div><!-- /.container -->
 
-	<div class="container fluid">
+	<div class="container">
 		<div class="row">
-			<div class="col-xs-12">
+			<div class="col-xs-12 col-md-9">
+				<p style="color: #aaa; margin-top: 28px;">
+					{{ $performance or '' }}
+				</p>
+
+				<h3>{{ $search_results or '' }}</h3>
+
 				<?php
 					if (isset($output))
 					{
@@ -91,21 +97,56 @@
 					}
 				?>
 			</div>
+
+			<div class="col-xs-12 col-md-3" style="margin-top: 88px;">
+
+				<?php
+					if (isset($tellers_hits)) {
+						print $tellers_count;
+					}
+
+					if (isset($places_hits)) {
+						print $places_count;
+					}
+				?>
+
+			</div>
 		</div>
 	</div><!-- /.container -->
 
-	<div class="container">
+	<!-- div class="container">
 		<div class="row">
 			<div class="col-xs-12">
 
 				<?php
-			        if (isset($inner_hits)) {
+/*			        if (isset($aggregations)) {
+						echo '<h3>Search</h3>';
+			            echo '<pre>';
+			            print_r($places_hits);
+			            echo '<br><br><br>';
+			            print_r($places);
+			            echo '<br><br><br>';
+			            print_r($aggregations);
+			            echo '</pre>';
+			        }
+				?>
+			</div>
+		</div>
+	</div><!-- /.container -->
+
+
+	<!-- div class="container">
+		<div class="row">
+			<div class="col-xs-12">
+
+				<?php
+/*			        if (isset($inner_hits)) {
 						echo '<h3>Inner Hits</h3>';
 			            echo '<pre>';
 			            print_r($inner_hits);
 			            echo '</pre>';
 			        }
-				?>
+*/				?>
 			</div>
 		</div>
 	</div><!-- /.container -->
@@ -114,6 +155,8 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<!-- Include all compiled plugins (below), or include individual files as needed -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+	<script src="resources/js/script.js"></script>
 
 </body>
 </html>
