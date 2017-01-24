@@ -55,7 +55,7 @@
 				</button>
 
 				<a class="navbar-brand" href="#">
-					<img alt="Folklori yne" src="...">
+					<img alt="Folklori yne" src="">
 				</a>
 			</div>
 
