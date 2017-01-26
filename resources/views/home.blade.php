@@ -98,15 +98,26 @@
 				?>
 			</div>
 
-			<div class="col-xs-12 col-md-3" style="margin-top: 88px;">
+			<div class="col-xs-12 col-md-3" style="margin-top: 48px;">
+				<h3>
+					{{ $filters or '' }}
+				</h3>
 
 				<?php
+					if (isset($categories_hits)) {
+						print $categories_count;
+					}
+
 					if (isset($tellers_hits)) {
 						print $tellers_count;
 					}
 
 					if (isset($places_hits)) {
 						print $places_count;
+					}
+
+					if (isset($volumes_hits)) {
+						print $volumes_count;
 					}
 				?>
 

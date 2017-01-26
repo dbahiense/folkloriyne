@@ -80,10 +80,10 @@ class HomeController extends Controller
 
         // How long took the search?
         $time = microtime(true) - $_SERVER["REQUEST_TIME_FLOAT"];
-        $time = round($time, 4);
+        $time = round($time, 3);
         $time = ' in '.$time.' seconds';
 
-        // Your search returned X results...
+        // Your search returned X result(s)...
         if ($hits == 0)
         {
             $results = 'no results';
@@ -101,8 +101,6 @@ class HomeController extends Controller
         $performance = 'Your search returned '.$results.$time.'.';
 
         $search_results = 'Search Results:';
-
-        $hr = '<hr>';
 
         // Output hits, results, etc.
         // To singular or plural of second see: http://ell.stackexchange.com/questions/7817/singular-or-plural-for-seconds
@@ -128,6 +126,13 @@ class HomeController extends Controller
             {
                 $text = 'N/A';
                 $word_count = '<small>N/A</small>';
+            }
+
+            // Teller
+            $teller = $inner_hits[$h]['_source']['name'];
+            if (empty($teller))
+            {
+                $teller = '<small>N/A</small>';
             }
 
             // Year
@@ -269,7 +274,7 @@ class HomeController extends Controller
             }
 
             // Basic information about the storyteller
-            $storyteller = '
+            $teller_info = '
                 <p style="padding-top: 12px;">
                     <i class="fa fa-lg fa-user-o" data-toggle="tooltip" data-placement="bottom" title="Basic information about the storyteller"></i>
                     <strong>'.$name.'</strong> '.$birth_info.'
@@ -290,7 +295,7 @@ class HomeController extends Controller
 
             if (empty($name))
             {
-                $storyteller = '';
+                $teller_info = '';
             }
 
             // Relevance score
@@ -307,18 +312,20 @@ class HomeController extends Controller
                     </a>
                     <small style="padding-right: 16px;">'.$word_count.'</small>
 
+                    <i class="fa fa-lg fa-user-circle" data-toggle="tooltip" data-placement="bottom" title="Storyteller"></i> <small style="padding-right: 16px;">'.$teller.'</small>
+
                     <i class="fa fa-lg fa-calendar" data-toggle="tooltip" data-placement="bottom" title="Date when the story was collected."></i> <small style="padding-right: 16px;">'.$year.'</small>
 
                     '.$map.'
                     <small style="padding-right: 16px;">'.$place.$municipality.$country.'</small>
 
-                    <a href=".heart" data-target=".heart" data-toggle="modal">
+                    <!-- a href=".heart" data-target=".heart" data-toggle="modal">
                         <i class="fa fa-lg fa-heart-o text-danger" data-toggle="tooltip" data-placement="bottom" title="Do you like this?"></i>
                     </a>
-                    <small style="padding-right: 16px;">0</small>
+                    <small style="padding-right: 16px;">0</small -->
 
                     <span class="pull-right">
-                        <i class="fa fa-compass text-warning" data-toggle="tooltip" data-placement="bottom" title="Result relevance"></i>
+                        <i class="fa fa-lg fa-list text-success" data-toggle="tooltip" data-placement="bottom" title="Result relevance"></i>
                         <small style="padding-right: 16px;">'.$_score.'</small>
                     </span>
                 </p>
@@ -338,7 +345,7 @@ class HomeController extends Controller
                         <i class="fa fa-lg fa-hashtag" data-toggle="tooltip" data-placement="bottom" title="Story number"></i> <small style="padding-right: 16px;">'.$nr.'</small>
                     </p>
 
-                    '.$storyteller.'
+                    '.$teller_info.'
 
                 </div>
 
@@ -348,12 +355,46 @@ class HomeController extends Controller
         // Aggregations
         $aggregations = $search['aggregations'];
 
+        // Categories
+        $categories = $aggregations['categories']['buckets'];
+        $categories_hits = count($categories);
+
+        $categories_count = '
+            <div style="padding: 4px 0;">
+                <a aria-expanded="false" aria-controls="collapse-categorys" data-toggle="collapse" href=".collapse-categorys">
+                    <h4>
+                        <i class="fa fa-lg fa-fw fa-folder-open-o" data-toggle="tooltip" data-placement="bottom" title=""></i> Categories ('.$categories_hits.')
+                    </h4>
+                </a>
+
+                <div class="collapse collapse-categorys">
+                    <table class="table table-condensed table-hover">
+                        <tbody>';
+
+        for ($h = 0; $h < $categories_hits; $h++) {
+            $category = $categories[$h]['key'];
+            $count = $categories[$h]['doc_count'];
+            $categories_count .= '
+                <tr>
+                    <td><nobr>'.$count.' x</nobr></td>
+                    <td>'.$category.'</td>
+                    <td><a href="#"><i class="fa fa-filter" data-toggle="tooltip" data-placement="bottom" title="Filter current search."></i></a></td>
+                    <td><a href="#"><i class="fa fa-database" data-toggle="tooltip" data-placement="bottom" title="Search everything within this category in the entire database."></i></a></td>
+                </tr>';
+        }
+
+        $categories_count .= '
+                        </tbody>
+                    </table>
+                </div>
+            </div>';
+
         // Storytellers
         $tellers = $aggregations['tellers']['buckets'];
         $tellers_hits = count($tellers);
 
         $tellers_count = '
-            <div style="padding-bottom: 8px;">
+            <div style="padding: 4px 0;">
                 <a aria-expanded="false" aria-controls="collapse-tellers" data-toggle="collapse" href=".collapse-tellers">
                     <h4>
                         <i class="fa fa-lg fa-fw fa-user-circle" data-toggle="tooltip" data-placement="bottom" title=""></i> Storytellers ('.$tellers_hits.')
@@ -367,7 +408,13 @@ class HomeController extends Controller
         for ($h = 0; $h < $tellers_hits; $h++) {
             $teller = $tellers[$h]['key'];
             $count = $tellers[$h]['doc_count'];
-            $tellers_count .= '<tr><td>'.$teller.'</td><td>'.$count.'</td></tr>';
+            $tellers_count .= '
+                <tr>
+                    <td>'.$count.' x</td>
+                    <td>'.$teller.'</td>
+                    <td><a href="#"><i class="fa fa-filter" data-toggle="tooltip" data-placement="bottom" title="Filter current search."></i></a></td>
+                    <td><a href="#"><i class="fa fa-database" data-toggle="tooltip" data-placement="bottom" title="Search everything of this storyteller in the entire database."></i></a></td>
+                </tr>';
         }
 
         $tellers_count .= '
@@ -382,10 +429,10 @@ class HomeController extends Controller
         $places_hits = count($places);
 
         $places_count = '
-            <div style="padding-bottom: 8px;">
+            <div style="padding: 4px 0;">
                 <a aria-expanded="false" aria-controls="collapse-places" data-toggle="collapse" href=".collapse-places">
                     <h4>
-                        <i class="fa fa-lg fa-fw fa-map-marker" data-toggle="tooltip" data-placement="bottom" title=""></i> Places ('.$places_hits.')
+                        <i class="fa fa-lg fa-fw fa-globe" data-toggle="tooltip" data-placement="bottom" title=""></i> Places ('.$places_hits.')
                     </h4>
                 </a>
 
@@ -396,7 +443,14 @@ class HomeController extends Controller
         for ($h = 0; $h < $places_hits; $h++) {
             $place = $places[$h]['key'];
             $count = $places[$h]['doc_count'];
-            $places_count .= '<tr><td>'.$place.'</td><td>'.$count.'</td></tr>';
+            $places_count .= '
+                <tr>
+                    <td><nobr>'.$count.' x</nobr></td>
+                    <td>'.$place.'</td>
+                    <td><a href="#"><i class="fa fa-filter" data-toggle="tooltip" data-placement="bottom" title="Filter current search."></i></a></td>
+                    <td><a href="#"><i class="fa fa-database" data-toggle="tooltip" data-placement="bottom" title="Search everything from this place in the entire database."></i></a></td>
+                </tr>';
+
         }
 
         $places_count .= '
@@ -405,6 +459,44 @@ class HomeController extends Controller
                 </div>
             </div>';
 
+        // Volumes
+        $volumes = $aggregations['volumes']['buckets'];
+        $volumes_hits = count($volumes);
+
+        $volumes_count = '
+            <div style="padding: 4px 0;">
+                <a aria-expanded="false" aria-controls="collapse-volumes" data-toggle="collapse" href=".collapse-volumes">
+                    <h4>
+                        <i class="fa fa-lg fa-fw fa-book" data-toggle="tooltip" data-placement="bottom" title=""></i> Volumes ('.$volumes_hits.')
+                    </h4>
+                </a>
+
+                <div class="collapse collapse-volumes">
+                    <table class="table table-condensed table-hover">
+                        <tbody>';
+
+        for ($h = 0; $h < $volumes_hits; $h++) {
+            $volume = $volumes[$h]['key'];
+            $count = $volumes[$h]['doc_count'];
+            $volumes_count .= '
+                <tr>
+                    <td><nobr>'.$count.' x</nobr></td>
+                    <td>'.$volume.'</td>
+                    <td><a href="#"><i class="fa fa-filter" data-toggle="tooltip" data-placement="bottom" title="Filter current search."></i></a></td>
+                    <td><a href="#"><i class="fa fa-database" data-toggle="tooltip" data-placement="bottom" title="Search everything within this volume in the entire database."></i></a></td>
+                </tr>';
+        }
+
+        $volumes_count .= '
+                        </tbody>
+                    </table>
+                </div>
+            </div>';
+
+        if(isset($categories_hits) OR isset($tellers_hits) OR isset($places_hits) OR isset($volumes_hits))
+        {
+            $filters = 'Filters:';
+        }
 
         // Return output and pass it to the view.
         return view('home', [
@@ -412,7 +504,13 @@ class HomeController extends Controller
             'performance' => $performance,
             'search_results' => $search_results,
             'output' => $output,
-            'aggregations' => $aggregations,
+            'filters' => $filters,
+            'categories' => $categories,
+            'categories_hits' => $categories_hits,
+            'categories_count' => $categories_count,
+            'volumes' => $volumes,
+            'volumes_hits' => $volumes_hits,
+            'volumes_count' => $volumes_count,
             'tellers' => $tellers,
             'tellers_hits' => $tellers_hits,
             'tellers_count' => $tellers_count,
