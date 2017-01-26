@@ -376,8 +376,7 @@ class HomeController extends Controller
             $count = $categories[$h]['doc_count'];
             $categories_count .= '
                 <tr>
-                    <td><nobr>'.$count.' x</nobr></td>
-                    <td>'.$category.'</td>
+                    <td>'.$category.' ('.$count.')</td>
                     <td><a href="#"><i class="fa fa-filter" data-toggle="tooltip" data-placement="bottom" title="Filter current search."></i></a></td>
                     <td><a href="#"><i class="fa fa-database" data-toggle="tooltip" data-placement="bottom" title="Search everything within this category in the entire database."></i></a></td>
                 </tr>';
@@ -410,8 +409,7 @@ class HomeController extends Controller
             $count = $tellers[$h]['doc_count'];
             $tellers_count .= '
                 <tr>
-                    <td>'.$count.' x</td>
-                    <td>'.$teller.'</td>
+                    <td>'.$teller.' ('.$count.')</td>
                     <td><a href="#"><i class="fa fa-filter" data-toggle="tooltip" data-placement="bottom" title="Filter current search."></i></a></td>
                     <td><a href="#"><i class="fa fa-database" data-toggle="tooltip" data-placement="bottom" title="Search everything of this storyteller in the entire database."></i></a></td>
                 </tr>';
@@ -445,8 +443,7 @@ class HomeController extends Controller
             $count = $places[$h]['doc_count'];
             $places_count .= '
                 <tr>
-                    <td><nobr>'.$count.' x</nobr></td>
-                    <td>'.$place.'</td>
+                    <td>'.$place.' ('.$count.')</td>
                     <td><a href="#"><i class="fa fa-filter" data-toggle="tooltip" data-placement="bottom" title="Filter current search."></i></a></td>
                     <td><a href="#"><i class="fa fa-database" data-toggle="tooltip" data-placement="bottom" title="Search everything from this place in the entire database."></i></a></td>
                 </tr>';
@@ -480,8 +477,7 @@ class HomeController extends Controller
             $count = $volumes[$h]['doc_count'];
             $volumes_count .= '
                 <tr>
-                    <td><nobr>'.$count.' x</nobr></td>
-                    <td>'.$volume.'</td>
+                    <td>'.$volume.' ('.$count.')</td>
                     <td><a href="#"><i class="fa fa-filter" data-toggle="tooltip" data-placement="bottom" title="Filter current search."></i></a></td>
                     <td><a href="#"><i class="fa fa-database" data-toggle="tooltip" data-placement="bottom" title="Search everything within this volume in the entire database."></i></a></td>
                 </tr>';
